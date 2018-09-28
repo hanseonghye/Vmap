@@ -66,6 +66,25 @@
 <script src="http://d3js.org/queue.v1.min.js"></script>
 <script src="http://d3js.org/topojson.v1.min.js"></script>
 <script>
+    let mapCity=new Map();
+    mapCity.set("강원도",["128.15549999","37.8228"]);
+    mapCity.set("경북", ["128.8889","36.4919"]);
+    mapCity.set("경남", ["128.21320","35.4606"]);
+    mapCity.set("전북", ["127.15300","35.71750"]);
+    mapCity.set("전남", ["126.99099","34.8679"]);
+    mapCity.set("제주", ["126.4983022","33.4890113"]);
+    mapCity.set("충남", ["126.799999","36.5184"]);
+    mapCity.set("충북",["127.7","36.8"]);
+    mapCity.set("경기도", ["127.518299","37.4137999"]);
+    mapCity.set("서울",["126.977969","37.566535"]);
+    mapCity.set("대구", ["128.601445", "35.8714354"]);
+    mapCity.set("세종", ["127.289035", "36.4800984"]);
+    mapCity.set("광주", ["126.8526011","35.1595454"]);
+    mapCity.set("울산", ["129.311359", "35.5383773"]);
+    mapCity.set("부산",["129.0756416", "35.1795543"]);
+    mapCity.set("인천",["126.705206","37.4562557"]);
+    mapCity.set("대전",["127.384547500","36.3504119"]);
+
     var width = 960,
         height = 500;
 
@@ -87,11 +106,6 @@
 
     var path = d3.geo.path().projection(projection);
 
-    var quantize = d3.scale.quantize()
-        .domain([0, 12234630]) // FIXME: automate
-        .range(d3.range(9).map(function(i) { return " p" + i; }));
-
-    var popById = d3.map();
 
     var radius = d3.scale.sqrt()
         .domain([0, 1e6])
@@ -127,16 +141,16 @@
         points.selectAll("circle")
             .data(data)
             .enter().append("circle")
-            .attr("cx", function(d) { return projection([d.lon, d.lat])[0]; })
-            .attr("cy", function(d) { return projection([d.lon, d.lat])[1]; })
+            .attr("cx", function(d) { return projection(mapCity.get(d.name))[0]; })
+            .attr("cy", function(d) { return projection(mapCity.get(d.name))[1]; })
             .attr("r", function(d) { return 5 * Math.sqrt(parseInt(d.pop)); })
             .style("fill", function(d) { return colorScale(d.pop); });
 
         points.selectAll("text")
             .data(data)
             .enter().append("text")
-            .attr("x", function(d) { return projection([d.lon, d.lat])[0]; })
-            .attr("y", function(d) { return projection([d.lon, d.lat])[1] + 5; })
+            .attr("x", function(d) { return projection(mapCity.get(d.name))[0]; })
+            .attr("y", function(d) { return projection(mapCity.get(d.name))[1] + 5; })
             .text(function(d) { return d.name });
 
     });
